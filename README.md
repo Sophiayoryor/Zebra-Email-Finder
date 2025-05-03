@@ -1,1 +1,402 @@
 # Zebra-Email-Finder
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zebra - Email Lead Finder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #FFFFFF;
+      color: #1A1A1A;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    header {
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      padding: 15px 0;
+    }
+
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 50px;
+    }
+
+    nav a {
+      color: #FFFFFF;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      color: #D4A017;
+    }
+
+    /* Home Page */
+    #home-page {
+      display: block;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      color: #6B46C1;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background-color: #6B46C1;
+      color: #FFFFFF;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background-color 0.3s;
+    }
+
+    .cta-button:hover {
+      background-color: #D4A017;
+    }
+
+    .demo {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .demo h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .demo-gif {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Lead Finder Page */
+    #lead-finder-page {
+      display: none;
+      padding: 40px 20px;
+    }
+
+    #lead-finder-page h1 {
+      font-size: 36px;
+      color: #6B46C1;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #FFFFFF;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 
+      border: 2px solid #6B46C1;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #D4A017;
+    }
+
+    .submit-button {
+      width: 100%;
+      background-color: #6B46C1;
+      color: #FFFFFF;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .submit-button:hover {
+      background-color: #D4A017;
+    }
+
+    .submit-button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    /* Loading Animation */
+    .loading {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid #6B46C1;
+      border-top: 4px solid #D4A017;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading p {
+      margin-top: 10px;
+      color: #6B46C1;
+      font-weight: 600;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Result and Error */
+    .result, .error {
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .result {
+      background-color: #FFFFFF;
+    }
+
+    .result h2 {
+      font-size: 24px;
+      color: #6B46C1;
+      margin-bottom: 15px;
+    }
+
+    .error {
+      background-color: #ffe6e6;
+      color: #d32f2f;
+      font-weight: 600;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #1A1A1A;
+      color: #FFFFFF;
+      text-align: center;
+      padding: 15px 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      #lead-finder-page h1 {
+        font-size: 28px;
+      }
+
+      .cta-button, .submit-button {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <img src="https://i.postimg.cc/tJnD4RHy/Untitled14-20250502175517.png" alt="Zebra Logo" class="logo">
+      <nav>
+        <a onclick="showPage('home-page')">Home</a>
+        <a onclick="showPage('lead-finder-page')">Lead Finder</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home-page">
+    <section class="container hero">
+      <h1>Find Email Leads with Zebra</h1>
+      <p>Zebra is your go-to tool for discovering professional email addresses quickly and efficiently. Enter a name and company domain, and let Zebra do the hunting!</p>
+      <a onclick="showPage('lead-finder-page')" class="cta-button">Find Leads with Zebra</a>
+    </section>
+    <section class="container demo">
+      <h2>What Zebra does for you</h2>
+      <img src="https://i.postimg.cc/LsD5XYMM/1746260024284.png" alt="Zebra Demo" class="demo-gif">
+    </section>
+  </main>
+
+  <main id="lead-finder-page">
+    <div class="container">
+      <h1>Zebra Lead Finder</h1>
+      <form id="lead-form">
+        <div class="form-group">
+          <label for="first-name">First Name</label>
+          <input type="text" id="first-name" placeholder="Brian" required>
+        </div>
+        <div class="form-group">
+          <label for="last-name">Last Name</label>
+          <input type="text" id="last-name" placeholder="Chesky" required>
+        </div>
+        <div class="form-group">
+          <label for="domain">Company Domain</label>
+          <input type="text" id="domain" placeholder="airbnb.com" required>
+        </div>
+        <button type="submit" class="submit-button">Find Lead</button>
+      </form>
+
+      <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Zebra is on the hunt for your lead…</p>
+      </div>
+
+      <div id="error" class="error hidden"></div>
+
+      <div id="result" class="result hidden">
+        <h2>Lead Found!</h2>
+        <p><strong>Email:</strong> <span id="result-email"></span></p>
+        <p><strong>Name:</strong> <span id="result-name"></span></p>
+        <p><strong>Domain:</strong> <span id="result-domain"></span></p>
+        <p><strong>Confidence:</strong> <span id="result-score"></span>%</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Zebra. All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    // Page Navigation
+    function showPage(pageId) {
+      document.getElementById('home-page').style.display = 'none';
+      document.getElementById('lead-finder-page').style.display = 'none';
+      document.getElementById(pageId).style.display = 'block';
+    }
+
+    // Form Handling
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('lead-form');
+      if (!form) return;
+
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const result = document.getElementById('result');
+      const resultEmail = document.getElementById('result-email');
+      const resultName = document.getElementById('result-name');
+      const resultDomain = document.getElementById('result-domain');
+      const resultScore = document.getElementById('result-score');
+      const submitButton = form.querySelector('.submit-button');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        // Reset UI
+        loading.classList.remove('hidden');
+        error.classList.add('hidden');
+        result.classList.add('hidden');
+        submitButton.disabled = true;
+
+        const firstName = document.getElementById('first-name').value;
+        const lastName = document.getElementById('last-name').value;
+        const domain = document.getElementById('domain').value;
+
+        try {
+          const response = await axios.get('https://api.hunter.io/v2/email-finder', {
+            params: {
+              domain: domain,
+              first_name: firstName,
+              last_name: lastName,
+              api_key: '02cfc5e6eaabff51159510b337a91b65a4ade7a4',
+            },
+          });
+
+          const data = response.data.data;
+          resultEmail.textContent = data.email;
+          resultName.textContent = `${data.first_name} ${data.last_name}`;
+          resultDomain.textContent = data.domain;
+          resultScore.textContent = data.score;
+          result.classList.remove('hidden');
+        } catch (err) {
+          if (err.response) {
+            if (err.response.status === 404) {
+              error.textContent = 'No email found for this person.';
+            } else if (err.response.status === 429) {
+              error.textContent = 'Rate limit exceeded. Please try again later.';
+            } else {
+              error.textContent = 'An error occurred. Please try again.';
+            }
+          } else {
+            error.textContent = 'Network error. Please check your connection.';
+          }
+          error.classList.remove('hidden');
+        } finally {
+          loading.classList.add('hidden');
+          submitButton.disabled = false;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
